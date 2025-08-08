@@ -53,4 +53,13 @@ public class BookController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Liste paginée d'une recherche de livres par auteur ou titre
+    // Peut être merged avec /api/books/ pour être RESTful
+    @GetMapping("/search")
+    public Page<BookDto> searchBooks(@RequestParam(required = false) String title,
+                                     @RequestParam(required = false) String author,
+                                     @PageableDefault(size = 20) Pageable pageable) {
+        return service.search(title, author, pageable);
+    }
 }

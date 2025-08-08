@@ -53,4 +53,9 @@ public class BookService {
         }
         bookRepository.deleteById(id);
     }
+
+    public Page<BookDto> search(String title, String author, Pageable pageable) {
+        return bookRepository.search(title, author, pageable)
+                .map(BookMapper::toDto);
+    }
 }
