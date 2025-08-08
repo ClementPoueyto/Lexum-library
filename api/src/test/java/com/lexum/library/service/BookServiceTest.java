@@ -1,6 +1,7 @@
 package com.lexum.library.service;
 
 import com.lexum.library.dto.BookDto;
+import com.lexum.library.dto.CreateBookRequest;
 import com.lexum.library.entity.Book;
 import com.lexum.library.exception.BookNotFoundException;
 import com.lexum.library.repository.BookRepository;
@@ -19,8 +20,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +37,8 @@ class BookServiceTest {
     private Book book;
     private BookDto dto;
 
+    private CreateBookRequest createBookRequest;
+
     @BeforeEach
     void setUp() {
         book = new Book(1L, "Clean Code", List.of("Robert C. Martin"),
@@ -47,6 +51,9 @@ class BookServiceTest {
         dto.setPublicationDate(LocalDate.of(2008, 8, 1));
         dto.setSummary("Guide du code propre.");
         dto.setPages(464);
+
+        createBookRequest = new CreateBookRequest( "Clean Code", List.of("Robert C. Martin"),
+                LocalDate.of(2008, 8, 1), "Guide du code propre.", 464);
     }
 
     @Test
@@ -72,9 +79,43 @@ class BookServiceTest {
 
     @Test
     void shouldThrowWhenBookNotFound() {
-        when(bookRepository.findById(999L)).thenReturn(Optional.empty());
+        when(bookRepository.findById(203L)).thenReturn(Optional.empty());
 
-        assertThrows(BookNotFoundException.class, () -> bookService.getBydId(999L));
+        assertThrows(BookNotFoundException.class, () -> bookService.getBydId(203L));
+    }
+
+    @Test
+    void shouldCreateBook() {
+        when(bookRepository.save(any(Book.class))).thenReturn(book);
+        BookDto result = bookService.create(createBookRequest);
+        assertEquals("Clean Code", result.getTitle());
+    }
+
+    @Test
+    void shouldUpdateBook() {
+        when(bookRepository.existsById(1L)).thenReturn(true);
+        when(bookRepository.save(any(Book.class))).thenReturn(book);
+        BookDto result = bookService.update(1L, createBookRequest);
+        assertEquals("Clean Code", result.getTitle());
+    }
+
+    @Test
+    void shouldThrowWhenUpdatingNonExistentBook() {
+        when(bookRepository.existsById(999L)).thenReturn(false);
+        assertThrows(BookNotFoundException.class, () -> bookService.update(999L, createBookRequest));
+    }
+
+    @Test
+    void shouldDeleteBook() {
+        when(bookRepository.existsById(1L)).thenReturn(true);
+        assertDoesNotThrow(() -> bookService.delete(1L));
+        verify(bookRepository).deleteById(1L);
+    }
+
+    @Test
+    void shouldThrowWhenDeletingNonExistentBook() {
+        when(bookRepository.existsById(999L)).thenReturn(false);
+        assertThrows(BookNotFoundException.class, () -> bookService.delete(999L));
     }
 
 }

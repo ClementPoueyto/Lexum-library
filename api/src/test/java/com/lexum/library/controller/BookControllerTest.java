@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 @WebMvcTest(BookController.class)
 class BookControllerTest {
@@ -62,5 +63,61 @@ class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", is("Effective Java")))
                 .andExpect(jsonPath("$.authors[0]", is("Joshua Bloch")));
+    }
+
+    @Test
+    void shouldRejectBookWithMissingFields() throws Exception {
+        String invalidJson = """
+        {
+            "title": "",
+            "authors": [],
+            "publicationDate": null,
+            "summary": "",
+            "pages": 0
+        }
+        """;
+
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldRejectNegativePages() throws Exception {
+        String invalidJson = """
+        {
+            "title": "Test Book",
+            "authors": ["Author"],
+            "publicationDate": "2023-01-01",
+            "summary": "Test summary",
+            "pages": -10
+        }
+        """;
+
+        mockMvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Input validation failed"));
+    }
+
+    @Test
+    void shouldRejectEmptyTitleOnUpdate() throws Exception {
+        String invalidJson = """
+        {
+            "title": "",
+            "authors": ["Author"],
+            "publicationDate": "2023-01-01",
+            "summary": "Updated summary",
+            "pages": 100
+        }
+        """;
+
+        mockMvc.perform(put("/api/books/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Input validation failed"));
     }
 }

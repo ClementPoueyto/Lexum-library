@@ -1,12 +1,14 @@
 package com.lexum.library.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class CreateBookRequest {
 
     @NotBlank(message = "Le titre est obligatoire")
