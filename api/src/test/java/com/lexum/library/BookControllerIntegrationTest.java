@@ -40,15 +40,30 @@ class BookControllerIntegrationTest {
         book.setPublicationDate(LocalDate.of(2003, 1, 1));
         book.setSummary("TDD explained.");
         book.setPages(240);
-
         bookRepository.save(book);
+
+        Book book2 = new Book();
+        book2.setTitle("Clean Code");
+        book2.setAuthors(List.of("Robert C. Martin"));
+        book2.setPublicationDate( LocalDate.of(2008, 8, 1));
+        book2.setSummary("Un guide du code propre.");
+        book2.setPages(464);
+        bookRepository.save(book2);
+
+        Book book3 = new Book();
+        book3.setTitle("Java Concurrency in Practice");
+        book3.setAuthors(List.of("Brian Goetz"));
+        book3.setPublicationDate( LocalDate.of(2006, 5, 1));
+        book3.setSummary("Multithreading avancé en Java.");
+        book3.setPages(384);
+        bookRepository.save(book3);
     }
 
     @Test
     void shouldReturnAllBooks() throws Exception {
         mockMvc.perform(get("/api/books?page=0&size=10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content", hasSize(3)))
                 .andExpect(jsonPath("$.content[0].title", is("Test Driven Development")));
     }
 
@@ -95,5 +110,36 @@ class BookControllerIntegrationTest {
 
         mockMvc.perform(delete("/api/books/" + saved.getId()))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldReturnMatchingBooksByTitle() throws Exception {
+        mockMvc.perform(get("/api/books/search")
+                        .param("title", "clean")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].summary").value("Un guide du code propre."));
+    }
+
+    @Test
+    void shouldReturnMatchingBooksByAuthor() throws Exception {
+        mockMvc.perform(get("/api/books/search")
+                        .param("author", "Z")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].summary").value("Multithreading avancé en Java."));
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenNoMatch() throws Exception {
+        mockMvc.perform(get("/api/books/search")
+                        .param("title", "nonexistent")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isEmpty());
     }
 }
