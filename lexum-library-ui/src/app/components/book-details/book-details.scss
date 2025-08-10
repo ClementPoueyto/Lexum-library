@@ -1,0 +1,19 @@
+mat-card {
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+mat-card-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+mat-card-subtitle {
+  font-size: 1rem;
+  color: #666;
+}
+
+mat-card-actions {
+  display: flex;
+  gap: 10px;
+}
