@@ -1,0 +1,76 @@
+<mat-card>
+  <mat-card-title>{{ isEdit ? 'Modifier le livre' : 'Ajouter un livre' }}</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="form-container">
+      <!-- Titre -->
+      <mat-form-field appearance="outline">
+        <mat-label>Titre</mat-label>
+        <input matInput formControlName="title" />
+        <mat-error *ngIf="bookForm.get('title')!.hasError('required')">
+          Le titre est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Auteurs -->
+      <div formArrayName="authors">
+        <div *ngFor="let authorCtrl of authors.controls; let i = index" class="author-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Auteur {{ i + 1 }}</mat-label>
+            <input matInput [formControlName]="i" placeholder="Nom de l'auteur" />
+            <mat-error *ngIf="authorCtrl.hasError('required')">
+              L'auteur est obligatoire
+            </mat-error>
+          </mat-form-field>
+          <button mat-icon-button color="warn" *ngIf="authors.length > 1" (click)="removeAuthor(i)" type="button">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <button mat-stroked-button color="primary" type="button" (click)="addAuthor()">+ Ajouter un auteur</button>
+      <!-- Date -->
+      <div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Date de publication</mat-label>
+        <input matInput placeholder="jj/mm/aaaa" [matDatepicker]="picker" formControlName="publicationDate" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="bookForm.get('publicationDate')!.hasError('required')">
+          La date est obligatoire
+        </mat-error>
+      </mat-form-field>
+    </div>
+      <!-- Nombre Pages -->
+      <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre de pages</mat-label>
+        <input matInput type="number" formControlName="pages" />
+        <mat-error *ngIf="bookForm.get('pages')!.hasError('required')">
+          Le nombre de pages est obligatoire
+        </mat-error>
+        <mat-error *ngIf="bookForm.get('pages')!.hasError('min')">
+          Le nombre de pages doit être positif
+        </mat-error>
+      </mat-form-field>
+      </div>
+      <!-- Résumé -->
+      <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Résumé</mat-label>
+        <textarea matInput formControlName="summary" rows="4"></textarea>
+        <mat-error *ngIf="bookForm.get('summary')!.hasError('required')">
+          Le résumé est obligatoire
+        </mat-error>
+      </mat-form-field>
+</div>
+      <div class="form-actions">
+        <button mat-stroked-button color="accent" type="button" (click)="router.navigate(['/'])">
+          Annuler
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="bookForm.invalid">
+          Enregistrer
+        </button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>

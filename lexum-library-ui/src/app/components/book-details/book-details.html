@@ -1,0 +1,28 @@
+<ng-container *ngIf="book; else loading">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ book.title }}</mat-card-title>
+      <mat-card-subtitle>{{ book.authors.join(', ') }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p><strong>Date de publication:</strong> {{ book.publicationDate | date:'longDate':'':'fr-FR' }}</p>
+      <p><strong>Pages:</strong> {{ book.pages }}</p>
+      <mat-divider></mat-divider>
+      <p style="margin-top: 10px;">{{ book.summary }}</p>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" [routerLink]="['/books', book.id, 'edit']">
+         Modifier
+      </button>
+      <button mat-stroked-button color="accent" routerLink="/">
+         Retour à la liste
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

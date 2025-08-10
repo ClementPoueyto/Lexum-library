@@ -1,0 +1,9 @@
+:host ::ng-deep tr.mat-row.clickable-cell {
+  cursor: pointer !important;
+}
+
+
+
+button[mat-raised-button] mat-icon {
+  margin: 0;
+}
