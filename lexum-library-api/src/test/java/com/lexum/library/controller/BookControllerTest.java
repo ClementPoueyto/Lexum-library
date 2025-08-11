@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,7 +41,7 @@ class BookControllerTest {
 
         Page<BookDto> page = new PageImpl<>(List.of(dto));
 
-        when(bookService.listAll(Pageable.ofSize(10))).thenReturn(page);
+        when(bookService.search(null, Pageable.ofSize(10))).thenReturn(page);
 
         mockMvc.perform(get("/api/books?page=0&size=10"))
                 .andExpect(status().isOk())

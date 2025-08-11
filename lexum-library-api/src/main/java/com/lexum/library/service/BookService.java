@@ -8,7 +8,9 @@ import com.lexum.library.mapper.BookMapper;
 import com.lexum.library.repository.BookRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -20,11 +22,6 @@ public class BookService {
 
     public BookService(BookRepository repo) {
         this.bookRepository = repo;
-    }
-
-    public Page<BookDto> listAll(Pageable pageable) {
-        Page<Book> bookPage = bookRepository.findAll(pageable);
-        return bookPage.map(BookMapper::toDto);
     }
 
     public BookDto getBydId(Long id) {
@@ -54,8 +51,14 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public Page<BookDto> search(String title, String author, Pageable pageable) {
-        return bookRepository.search(title, author, pageable)
+    public Page<BookDto> search(String query, Pageable pageable) {
+
+        //Pageable pageableRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
+
+        if(query == null || query.trim().isEmpty()) {
+            return bookRepository.findAll(pageable).map(BookMapper::toDto);
+        }
+        return bookRepository.search(query, pageable)
                 .map(BookMapper::toDto);
     }
 }

@@ -11,10 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -58,11 +55,11 @@ class BookServiceTest {
 
     @Test
     void shouldReturnAllBooks() {
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 1000);
         Page<Book> page = new PageImpl<>(List.of(book));
-        when(bookRepository.findAll(pageable)).thenReturn(page);
+        when(bookRepository.findAll(PageRequest.of(0, 1000, Sort.by(Sort.Direction.ASC, "id")))).thenReturn(page);
 
-        Page<BookDto> result = bookService.listAll(pageable);
+        Page<BookDto> result = bookService.search("",pageable);
 
         assertEquals(1, result.getContent().size());
         assertEquals("Clean Code", result.getContent().get(0).getTitle());
