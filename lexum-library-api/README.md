@@ -82,11 +82,6 @@ JDBC URL: jdbc:h2:mem:librairie-db
 - **Sécurité de l’API**
     - Ajouter Spring Security pour sécuriser certaines routes.
 
-- **Déploiement**
-    - Dockeriser l'application pour faciliter le déploiement.
-    - Ajouter un fichier `Dockerfile` + `docker-compose.yml`.
-
-
 ---
 
 ## Setup & Installation
