@@ -85,3 +85,17 @@ JDBC URL: jdbc:h2:mem:librairie-db
 - **Déploiement**
     - Dockeriser l'application pour faciliter le déploiement.
     - Ajouter un fichier `Dockerfile` + `docker-compose.yml`.
+
+
+---
+
+## Setup & Installation
+
+### Prérequis:
+
+Java 17+
+Maven 3.9+
+
+```bash
+mvn spring-boot:run
+```
