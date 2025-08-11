@@ -47,8 +47,6 @@ spring.h2.console.path=/h2-console
 | POST    | `/api/books`          | Ajouter un nouveau livre         |
 | PUT     | `/api/books/{id}`     | Modifier un livre existant       |
 | DELETE  | `/api/books/{id}`     | Supprimer un livre               |
-| GET     | `/api/books/search`   | Rechercher par titre ou auteur   |
-
 
 ## Tests
 

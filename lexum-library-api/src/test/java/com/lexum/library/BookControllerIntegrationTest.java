@@ -114,9 +114,8 @@ class BookControllerIntegrationTest {
 
     @Test
     void shouldReturnMatchingBooksByTitle() throws Exception {
-        mockMvc.perform(get("/api/books/search")
-                        .param("title", "clean")
-                        .param("page", "0")
+        mockMvc.perform(get("/api/books")
+                        .param("query", "clean")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -125,9 +124,8 @@ class BookControllerIntegrationTest {
 
     @Test
     void shouldReturnMatchingBooksByAuthor() throws Exception {
-        mockMvc.perform(get("/api/books/search")
-                        .param("author", "Z")
-                        .param("page", "0")
+        mockMvc.perform(get("/api/books")
+                        .param("query", "Go")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -136,8 +134,8 @@ class BookControllerIntegrationTest {
 
     @Test
     void shouldReturnEmptyListWhenNoMatch() throws Exception {
-        mockMvc.perform(get("/api/books/search")
-                        .param("title", "nonexistent")
+        mockMvc.perform(get("/api/books")
+                        .param("query", "nonexistent")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isEmpty());

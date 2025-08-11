@@ -39,28 +39,28 @@ class BookRepositorySearchImplTest {
 
     @Test
     void shouldFindBooksByTitle() {
-        Page<Book> result = bookRepository.search("clean", null, PageRequest.of(0, 10));
+        Page<Book> result = bookRepository.search("clean", PageRequest.of(0, 10));
         assertEquals(1, result.getTotalElements());
         assertEquals("Clean Code", result.getContent().get(0).getTitle());
     }
 
     @Test
     void shouldFindBooksByAuthor() {
-        Page<Book> result = bookRepository.search(null, "bloch", PageRequest.of(0, 10));
+        Page<Book> result = bookRepository.search( "bloch", PageRequest.of(0, 10));
         assertEquals(1, result.getTotalElements());
         assertEquals("Effective Java", result.getContent().get(0).getTitle());
     }
 
     @Test
     void shouldFindBooksByTitleAndAuthor() {
-        Page<Book> result = bookRepository.search("petit", "antoine", PageRequest.of(0, 10));
-        assertEquals(1, result.getTotalElements());
-        assertEquals("Le Petit Prince", result.getContent().get(0).getTitle());
+        Page<Book> result = bookRepository.search("i", PageRequest.of(0, 10));
+        assertEquals(3, result.getTotalElements());
+        assertEquals("Le Petit Prince", result.getContent().get(2).getTitle());
     }
 
     @Test
     void shouldReturnEmptyWhenNoMatch() {
-        Page<Book> result = bookRepository.search("unknown", "nobody", PageRequest.of(0, 10));
+        Page<Book> result = bookRepository.search("unknown", PageRequest.of(0, 10));
         assertTrue(result.isEmpty());
     }
 }

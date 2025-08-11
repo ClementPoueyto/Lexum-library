@@ -17,7 +17,6 @@ public class CreateBookRequest {
     @NotEmpty(message = "Au moins un auteur est requis")
     private List<@NotBlank(message = "Nom d'auteur vide") String> authors;
 
-    @PastOrPresent(message = "La date de publication ne peut être dans le futur")
     private LocalDate publicationDate;
 
     @Size(max = 5000, message = "Résumé trop long")

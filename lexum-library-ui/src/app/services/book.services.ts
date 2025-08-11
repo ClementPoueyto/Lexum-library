@@ -12,22 +12,13 @@ export class BookService {
 
   constructor(private http: HttpClient) {}
 
-
-  getBooks(page: number = 0, size: number = 20): Observable<Page<Book>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    return this.http.get<Page<Book>>(this.apiUrl, { params });
-  }
-
   searchBooks(query: string, page: number = 0, size: number = 20): Observable<Page<Book>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
-      .set('title', query)
-      .set('author', query);
+      .set('query', query);
 
-    return this.http.get<Page<Book>>(`${this.apiUrl}/search`, { params });
+    return this.http.get<Page<Book>>(`${this.apiUrl}`, { params });
   }
 
   getBookById(id: number): Observable<Book> {
