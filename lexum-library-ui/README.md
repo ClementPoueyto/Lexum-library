@@ -3,16 +3,14 @@
 Cette application Angular permet d'afficher et de gérer une liste de livres avec pagination, recherche et actions CRUD, en utilisant les composants Angular Material.
 
 ## Fonctionnalités
-- Affichage d'une liste de livres paginée avec tri et filtrage.
+- Affichage d'une liste de livres paginée.
 - Recherche de livres par titre ou auteur.
 - Consultation, modification et suppression de livres avec confirmation.
 - Pagination avec état persistant : mémorisation de la page et du terme de recherche.
-- Interface responsive grâce à Angular Material.
 
 ## Stack Technologique
 - Angular 20+
 - Angular Material (Table, Paginator, Champs de formulaire, Boutons, Icônes, Spinner)
-- RxJS pour la gestion réactive des données
 - TypeScript
 - Jasmine/Karma pour les tests unitaires
 
@@ -25,7 +23,7 @@ Cette application Angular permet d'afficher et de gérer une liste de livres ave
 
 ## Installation et Lancement
 ### Prérequis :
-- Node.js 
+- Node.js 20.19
 - Angular CLI 
 
 
